@@ -1,0 +1,1 @@
+print ("ditunggu nggeh pak")
