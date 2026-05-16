@@ -1,13 +1,10 @@
-import numpy as np
-import time
-import random
+from data_structures.priority_queue import PriorityQueue
+from data_structures.stack import Stack
+from data_structures.bst import BSTRekamMedis
 
-from dataclasses import dataclass
-from typing import Optional, List
+from modules.antrean_pasien import AntreanPasien
+from modules.dokter_service import DokterService
 
-# Seed random WAJIB sama sesuai instruksi dosen
-np.random.seed(42)
-random.seed(42)
 
 POLI = ['Umum', 'Jantung', 'Ortopedi', 'Anak', 'Gigi']
 
@@ -17,184 +14,81 @@ PRIORITAS = {
     'REGULER': 3
 }
 
-
-# ─────────────────────────────────────────────────────────
-# DATA PASIEN
-# ─────────────────────────────────────────────────────────
-
-@dataclass
-class Pasien:
-    no_antrian: int
-    nama: str
-    poli: str
-    prioritas: int
-    waktu_daftar: float
-    waktu_tunggu: float = 0.0
-
-
-# ─────────────────────────────────────────────────────────
-# REKAM MEDIS
-# ─────────────────────────────────────────────────────────
-
-@dataclass
-class RekorMedis:
-    no_rm: int
-    nama: str
-    riwayat: List[str]
-
-
-# ─────────────────────────────────────────────────────────
-# NODE LINKED LIST
-# ─────────────────────────────────────────────────────────
-
-class LLNode:
-    def __init__(self, data=None):
-        self.data = data
-        self.next: Optional['LLNode'] = None
-
-
-# ─────────────────────────────────────────────────────────
-# PRIORITY QUEUE
-# ─────────────────────────────────────────────────────────
-
-class PriorityQueue:
-    """
-    Priority Queue berbasis Singly Linked List.
-    Prioritas kecil = lebih penting.
-    """
-
-    def __init__(self):
-        self.head: Optional[LLNode] = None
-        self._size: int = 0
-
-    def enqueue(self, pasien: Pasien) -> None:
-        """
-        Big-O: O(n)
-        """
-        # TODO: implementasikan
-        pass
-
-    def dequeue(self) -> Optional[Pasien]:
-        """
-        Big-O: O(1)
-        """
-        # TODO: implementasikan
-        pass
-
-    def peek(self) -> Optional[Pasien]:
-        """
-        Big-O: O(1)
-        """
-        # TODO: implementasikan
-        pass
-
-    def is_empty(self) -> bool:
-        return self._size == 0
-
-    def __len__(self) -> int:
-        return self._size
-
-
-# ─────────────────────────────────────────────────────────
-# STACK
-# ─────────────────────────────────────────────────────────
-
-class Stack:
-    """
-    Stack berbasis Singly Linked List (LIFO)
-    """
-
-    def __init__(self):
-        self.top: Optional[LLNode] = None
-        self._size: int = 0
-
-    def push(self, tindakan: str) -> None:
-        """
-        Big-O: O(1)
-        """
-        # TODO: implementasikan
-        pass
-
-    def pop(self) -> Optional[str]:
-        """
-        Big-O: O(1)
-        """
-        # TODO: implementasikan
-        pass
-
-    def peek(self) -> Optional[str]:
-        """
-        Big-O: O(1)
-        """
-        # TODO: implementasikan
-        pass
-
-
-# ─────────────────────────────────────────────────────────
-# BST NODE
-# ─────────────────────────────────────────────────────────
-
-class BSTNode:
-    def __init__(self, rekord: RekorMedis):
-        self.rekord = rekord
-        self.left: Optional['BSTNode'] = None
-        self.right: Optional['BSTNode'] = None
-
-
-# ─────────────────────────────────────────────────────────
-# BST REKAM MEDIS
-# ─────────────────────────────────────────────────────────
-
-class BSTRekamMedis:
-
-    def __init__(self):
-        self.root: Optional[BSTNode] = None
-
-    def insert(self, rekord: RekorMedis) -> None:
-        """
-        Big-O rata-rata: O(log n)
-        Worst-case: O(n)
-        """
-        # TODO: implementasikan
-        pass
-
-    def search(self, no_rm: int) -> Optional[RekorMedis]:
-        """
-        Big-O rata-rata: O(log n)
-        Worst-case: O(n)
-        """
-        # TODO: implementasikan
-        pass
-
-    def inorder(self) -> List[RekorMedis]:
-        """
-        Big-O: O(n)
-        """
-        # TODO: implementasikan
-        pass
-
-
-# ─────────────────────────────────────────────────────────
-# MAIN CLI
-# ─────────────────────────────────────────────────────────
-
 def main():
 
-    queues = {poli: PriorityQueue() for poli in POLI}
+    queues = {
+        poli: PriorityQueue()
+        for poli in POLI
+    }
 
     dokter_stacks = {
-        i: Stack() for i in range(len(POLI))
+        i: Stack()
+        for i in range(len(POLI))
     }
 
     bst_rm = BSTRekamMedis()
 
-    counter = 0
+    antrean_service = AntreanPasien()
+    dokter_service = DokterService()
 
-    print("Smart Hospital Queue System")
-    print("Ketik BANTUAN untuk daftar perintah")
+    counter = 1
+    print('=== SMART HOSPITAL QUEUE SYSTEM ===')
 
-    # TODO:
-    # Implementasi CLI
+    while True:
+
+        print('\nMenu:')
+        print('1. Daftar Pasien')
+        print('2. Panggil Pasien')
+        print('3. Undo Dokter')
+        print('4. Keluar')
+
+        pilihan = input('Pilih menu: ')
+
+        if pilihan == '1':
+
+            nama = input('Nama pasien: ')
+            poli = input('Poli: ')
+            prioritas = input('Prioritas: ').upper()
+            
+            antrean_service.daftar_pasien(
+                queues[poli],
+                counter,
+                nama,
+                poli,
+                PRIORITAS[prioritas]
+            )
+
+            print('Pasien berhasil ditambahkan')
+
+            counter += 1
+
+        elif pilihan == '2':
+
+            poli = input('Poli: ')
+
+            pasien = antrean_service.panggil_pasien(
+                queues[poli]
+            )
+
+            if pasien:
+                print('Memanggil:', pasien.nama)
+            else:
+                print('Antrean kosong')
+
+        elif pilihan == '3':
+
+            hasil = dokter_service.undo_tindakan(
+                dokter_stacks[0]
+            )
+
+            print('Undo:', hasil)
+
+        elif pilihan == '4':
+            print('Program selesai')
+            break
+
+        else:
+            print('Pilihan tidak valid')
 
 
 if __name__ == '__main__':

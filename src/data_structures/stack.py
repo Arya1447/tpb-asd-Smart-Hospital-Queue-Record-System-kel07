@@ -1,11 +1,4 @@
-from typing import Optional
-
-
-class Node:
-
-    def __init__(self, data=None):
-        self.data = data
-        self.next: Optional['Node'] = None
+from data_structures.node import Node
 
 
 class Stack:
@@ -14,7 +7,6 @@ class Stack:
         self.top = None
         self.size = 0
 
-    # PUSH
     def push(self, data):
 
         new_node = Node(data)
@@ -24,7 +16,6 @@ class Stack:
 
         self.size += 1
 
-    # POP
     def pop(self):
 
         if self.top is None:
@@ -38,20 +29,11 @@ class Stack:
 
         return removed
 
-    # PEEK
     def peek(self):
 
         if self.top is None:
             return None
-
         return self.top.data
 
-    # ISEMPTY
     def is_empty(self):
-
         return self.top is None
-
-    # LENGTH
-    def __len__(self):
-
-        return self.size

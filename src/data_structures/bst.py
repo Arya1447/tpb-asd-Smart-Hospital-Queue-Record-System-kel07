@@ -1,12 +1,9 @@
-from typing import Optional, List
-
-
 class BSTNode:
 
     def __init__(self, rekord):
         self.rekord = rekord
-        self.left: Optional['BSTNode'] = None
-        self.right: Optional['BSTNode'] = None
+        self.left = None
+        self.right = None
 
 
 class BSTRekamMedis:
@@ -14,21 +11,17 @@ class BSTRekamMedis:
     def __init__(self):
         self.root = None
 
-    # INSERT
     def insert(self, rekord):
 
         new_node = BSTNode(rekord)
 
-        # jika tree kosong
         if self.root is None:
             self.root = new_node
             return
-
-        current = self.root
+            current = self.root
 
         while True:
 
-            # masuk kiri
             if rekord.no_rm < current.rekord.no_rm:
 
                 if current.left is None:
@@ -37,7 +30,6 @@ class BSTRekamMedis:
 
                 current = current.left
 
-            # masuk kanan
             else:
 
                 if current.right is None:
@@ -46,7 +38,6 @@ class BSTRekamMedis:
 
                 current = current.right
 
-    # SEARCH
     def search(self, no_rm):
 
         current = self.root
@@ -63,22 +54,3 @@ class BSTRekamMedis:
                 current = current.right
 
         return None
-
-    # INORDER TRAVERSAL
-    def inorder(self):
-
-        hasil = []
-
-        def traverse(node):
-
-            if node is not None:
-
-                traverse(node.left)
-
-                hasil.append(node.rekord)
-
-                traverse(node.right)
-
-        traverse(self.root)
-
-        return hasil

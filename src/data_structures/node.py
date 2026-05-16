@@ -1,6 +1,7 @@
 from typing import Optional
 
-class LLNode:
+
+class Node:
     def __init__(self, data=None):
         self.data = data
-        self.next: Optional['LLNode'] = None
+        self.next: Optional['Node'] = None
