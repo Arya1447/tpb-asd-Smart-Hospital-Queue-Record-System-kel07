@@ -3,6 +3,8 @@ from data_structures.stack import Stack
 from data_structures.bst import BSTRekamMedis
 from modules.antrean_pasien import AntreanPasien
 from modules.dokter_service import DokterService
+from modules.laporan_service import LaporanService
+from modules.rekam_medis_service import RekamMedisService
 
 POLI = ['Umum', 'Jantung', 'Ortopedi', 'Anak', 'Gigi']
 
@@ -24,10 +26,11 @@ def main():
         for poli in POLI
     }
 
+    laporan_service = LaporanService()
     bst_rm = BSTRekamMedis()
     antrean_service = AntreanPasien()
     dokter_service = DokterService()
-
+    rekam_medis_service = RekamMedisService()
     counter = 1
     print('=== SMART HOSPITAL QUEUE SYSTEM ===')
 
@@ -74,12 +77,18 @@ def main():
                 print(f"Error: Poli '{poli}' tidak ditemukan!")
                 continue
 
+            
             pasien = antrean_service.panggil_pasien(queues[poli])
 
             if pasien:
-                print('Memanggil:', pasien.nama)
+                try:
+                    print('Memanggil:', pasien.nama)
+                except AttributeError:
+                    print('Memanggil:', pasien)
             else:
                 print(f'Antrean poli {poli} kosong')
+            print("--- Status Antrean Saat Ini ---")
+            laporan_service.tampilkan_total_pasien(queues[poli])
 
         
         elif pilihan in ['3', 'tambah tindakan']:
@@ -90,7 +99,6 @@ def main():
                 continue
                 
             tindakan = input('Masukkan nama tindakan: ')
-            
             
             dokter_service.tambah_tindakan(dokter_stacks[poli], tindakan)
             print(f"Tindakan '{tindakan}' berhasil ditambahkan ke poli {poli}.")
@@ -111,15 +119,27 @@ def main():
 
         
         elif pilihan in ['5', 'rekam medis']:
-            print('Fitur rekam medis (BST) belum diimplementasikan di service.')
+            print('\nSub-Menu Rekam Medis:')
+            print('A. Tambah Rekam Medis')
+            print('B. Cari Rekam Medis')
+            sub_pilihan = input('Pilih opsi (A/B): ').strip().upper()
 
-       
-        elif pilihan in ['6', 'keluar']:
-            print('Program selesai. Terima kasih!')
-            break
+            if sub_pilihan == 'A':
+            
+                data_rm = input('Masukkan data rekam medis (misal: "RM001 - Budi - Sakit Gigi"): ')
+                rekam_medis_service.tambah_rekam_medis(bst_rm, data_rm)
+                print('Data rekam medis berhasil dimasukkan ke dalam BST.')
 
-        else:
-            print('Pilihan tidak valid, silakan coba lagi.')
+            elif sub_pilihan == 'B':
+                no_rm = input('Masukkan nomor/keyword rekam medis yang dicari: ')
+                hasil_cari = rekam_medis_service.cari_rekam_medis(bst_rm, no_rm)
+                
+                if hasil_cari:
+                    print('Data Rekam Medis Ditemukan:', hasil_cari)
+                else:
+                    print('Data Rekam Medis tidak ditemukan.')
+            else:
+                print('Opsi tidak valid.')
 
 if __name__ == '__main__':
     main()
