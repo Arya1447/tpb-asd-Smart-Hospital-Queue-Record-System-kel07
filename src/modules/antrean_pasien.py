@@ -1,7 +1,26 @@
-class RekamMedisService:
+from models.pasien import Pasien
 
-    def tambah_rekam_medis(self, bst, data):
-        bst.insert(data)
 
-    def cari_rekam_medis(self, bst, no_rm):
-        return bst.search(no_rm)
+class AntreanPasien:
+
+    def daftar_pasien(
+        self,
+        queue,
+        nomor,
+        nama,
+        poli,
+        prioritas
+    ):
+
+        pasien = Pasien(
+            nomor,
+            nama,
+            poli,
+            prioritas
+        )
+
+        queue.enqueue(pasien)
+
+    def panggil_pasien(self, queue):
+
+        return queue.dequeue()
