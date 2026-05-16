@@ -84,7 +84,12 @@ def main():
 
             print('Undo:', hasil)
 
-        elif pilihan == '4' or pilihan == 'keluar'
+        elif pilihan
+
+
+
+
+        elif pilihan == '6' or pilihan == 'keluar' or pilihan == 'Keluar':
             print('Program selesai')
             break
 
