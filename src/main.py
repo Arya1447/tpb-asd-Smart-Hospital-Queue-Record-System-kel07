@@ -39,12 +39,14 @@ def main():
         print('\nMenu:')
         print('1. Daftar Pasien')
         print('2. Panggil Pasien')
-        print('3. Undo Dokter')
-        print('4. Keluar')
+        print('3. Tambah Tindakan')
+        print('4. undo tindakan')
+        print('5. Rekam Medis')
+        print('6. Keluar')
 
         pilihan = input('Pilih menu: ')
 
-        if pilihan == '1':
+        if pilihan == '1' or pilihan == 'Daftar Pasien' or pilihan == 'daftar pasien':
 
             nama = input('Nama pasien: ')
             poli = input('Poli: ')
@@ -62,8 +64,7 @@ def main():
 
             counter += 1
 
-        elif pilihan == '2':
-
+        elif pilihan == '2' or pilihan == 'panggil pasien' or pilihan == 'Panggil Pasien':
             poli = input('Poli: ')
 
             pasien = antrean_service.panggil_pasien(
@@ -75,7 +76,7 @@ def main():
             else:
                 print('Antrean kosong')
 
-        elif pilihan == '3':
+        elif pilihan == '3' or pilihan == 'Tambah Tindakan' or pilihan == 'tambah tindakan':
 
             hasil = dokter_service.undo_tindakan(
                 dokter_stacks[0]
@@ -83,7 +84,7 @@ def main():
 
             print('Undo:', hasil)
 
-        elif pilihan == '4':
+        elif pilihan == '4' or pilihan == 'keluar'
             print('Program selesai')
             break
 
