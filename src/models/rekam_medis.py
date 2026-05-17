@@ -7,4 +7,4 @@ class RekamMedis:
     no_rm: int
     nama: str
     poli: str
-    riwayat: List[str]
+    riwayat: List[dict]

@@ -64,6 +64,7 @@ def main():
         if pilihan in ['1', 'daftar pasien']:
 
             nama = input('Nama pasien: ')
+
             poli = input(
                 'Poli (Umum/Jantung/Ortopedi/Anak/Gigi): '
             ).strip().capitalize()
@@ -96,7 +97,9 @@ def main():
 
         elif pilihan in ['2', 'panggil pasien']:
 
-            poli = input('Poli: ').strip().capitalize()
+            poli = input(
+                'Poli (Umum/Jantung/Ortopedi/Anak/Gigi): '
+            ).strip().capitalize()
 
             if poli not in queues:
                 print('Poli tidak tersedia')
@@ -108,49 +111,148 @@ def main():
 
             if pasien:
 
-                print('Memanggil:', pasien.nama)
-
-                tindakan = input('Masukkan tindakan: ')
-
-                dokter_service.tambah_tindakan(
-                    dokter_stacks[poli],
-                    pasien,
-                    tindakan
+                dokter = dokter_service.get_dokter(
+                    poli
                 )
 
-                rm_lama = bst_rm.search(
-                    pasien.no_antrian
+                print('\n=== PASIEN DIPANGGIL ===')
+
+                print(
+                    'Nama :',
+                    pasien.nama
                 )
 
-                if rm_lama:
+                print(
+                    'Poli :',
+                    pasien.poli
+                )
 
-                    rm_lama.riwayat.append(
+                print(
+                    'Dokter :',
+                    dokter
+                )
+
+                print(
+                    'Waktu Tunggu :',
+                    f'{pasien.waktu_tunggu:.2f} detik'
+                )
+
+                while True:
+
+                    tindakan = input(
+                        'Masukkan tindakan '
+                        '(ketik selesai jika selesai): '
+                    )
+
+                    if tindakan.lower() == 'selesai':
+                        break
+
+                    tanggal = time.strftime(
+                        '%Y-%m-%d %H:%M:%S'
+                    )
+
+                    dokter_service.tambah_tindakan(
+                        dokter_stacks[poli],
+                        pasien,
+                        dokter,
                         tindakan
                     )
 
-                else:
-
-                    rm = RekamMedis(
-                        pasien.no_antrian,
-                        pasien.nama,
-                        pasien.poli,
-                        [tindakan]
+                    rm_lama = bst_rm.search(
+                        pasien.no_antrian
                     )
 
-                    bst_rm.insert(rm)
+                    data_tindakan = {
+                        "tindakan": tindakan,
+                        "dokter": dokter,
+                        "tanggal": tanggal
+                    }
+
+                    if rm_lama:
+
+                        rm_lama.riwayat.append(
+                            data_tindakan
+                        )
+
+                    else:
+
+                        rm = RekamMedis(
+                            pasien.no_antrian,
+                            pasien.nama,
+                            pasien.poli,
+                            [data_tindakan]
+                        )
+
+                        bst_rm.insert(rm)
+
+                    print(
+                        f'Tindakan "{tindakan}" berhasil ditambahkan'
+                    )
 
                 print('\n=== REKAM MEDIS ===')
-                print('No RM :', pasien.no_antrian)
-                print('Nama  :', pasien.nama)
-                print('Poli  :', pasien.poli)
-                print('Tindakan :', tindakan)
+
+                print(
+                    'No RM :',
+                    pasien.no_antrian
+                )
+
+                print(
+                    'Nama  :',
+                    pasien.nama
+                )
+
+                print(
+                    'Poli  :',
+                    pasien.poli
+                )
+
+                print(
+                    'Dokter :',
+                    dokter
+                )
+
+                print(
+                    'Waktu Tunggu :',
+                    f'{pasien.waktu_tunggu:.2f} detik'
+                )
+
+                hasil = bst_rm.search(
+                    pasien.no_antrian
+                )
+
+                if hasil:
+
+                    print('Riwayat Tindakan:')
+
+                    for item in hasil.riwayat:
+
+                        print(
+                            '-------------------'
+                        )
+
+                        print(
+                            'Tindakan :',
+                            item["tindakan"]
+                        )
+
+                        print(
+                            'Dokter   :',
+                            item["dokter"]
+                        )
+
+                        print(
+                            'Tanggal  :',
+                            item["tanggal"]
+                        )
 
             else:
                 print('Antrean kosong')
 
         elif pilihan in ['3', 'undo tindakan']:
 
-            poli = input('Poli: ').strip().capitalize()
+            poli = input(
+                'Poli: '
+            ).strip().capitalize()
 
             if poli not in dokter_stacks:
                 print('Poli tidak tersedia')
@@ -160,7 +262,9 @@ def main():
                 input('Nomor RM: ')
             )
 
-            rm = bst_rm.search(nomor_rm)
+            rm = bst_rm.search(
+                nomor_rm
+            )
 
             if rm is None:
                 print('Rekam medis tidak ditemukan')
@@ -174,18 +278,47 @@ def main():
 
                 if rm.riwayat:
 
-                    tindakan_dihapus = rm.riwayat.pop()
+                    tindakan_dihapus = (
+                        rm.riwayat.pop()
+                    )
 
                     print('Undo berhasil')
-                    print('No RM :', rm.no_rm)
-                    print('Nama  :', rm.nama)
+
+                    print(
+                        'No RM :',
+                        rm.no_rm
+                    )
+
+                    print(
+                        'Nama  :',
+                        rm.nama
+                    )
+
                     print(
                         'Tindakan dihapus :',
-                        tindakan_dihapus
+                        tindakan_dihapus[
+                            "tindakan"
+                        ]
+                    )
+
+                    print(
+                        'Dokter :',
+                        tindakan_dihapus[
+                            "dokter"
+                        ]
+                    )
+
+                    print(
+                        'Tanggal :',
+                        tindakan_dihapus[
+                            "tanggal"
+                        ]
                     )
 
                 else:
-                    print('Riwayat tindakan kosong')
+                    print(
+                        'Riwayat tindakan kosong'
+                    )
 
             else:
                 print('Tidak ada tindakan')
@@ -193,41 +326,87 @@ def main():
         elif pilihan in ['4', 'rekam medis']:
 
             nomor_rm = int(
-                input('Masukkan nomor RM: ')
+                input(
+                    'Masukkan nomor RM: '
+                )
             )
 
-            hasil = bst_rm.search(nomor_rm)
+            hasil = bst_rm.search(
+                nomor_rm
+            )
 
             if hasil:
 
-                print('\n=== REKAM MEDIS ===')
-                print('No RM :', hasil.no_rm)
-                print('Nama  :', hasil.nama)
-                print('Poli  :', hasil.poli)
+                print(
+                    '\n=== REKAM MEDIS ==='
+                )
 
-                print('Riwayat Tindakan:')
+                print(
+                    'No RM :',
+                    hasil.no_rm
+                )
+
+                print(
+                    'Nama  :',
+                    hasil.nama
+                )
+
+                print(
+                    'Poli  :',
+                    hasil.poli
+                )
+
+                print(
+                    'Riwayat Tindakan:'
+                )
 
                 for item in hasil.riwayat:
-                    print('-', item)
+
+                    print(
+                        '-------------------'
+                    )
+
+                    print(
+                        'Tindakan :',
+                        item["tindakan"]
+                    )
+
+                    print(
+                        'Dokter   :',
+                        item["dokter"]
+                    )
+
+                    print(
+                        'Tanggal  :',
+                        item["tanggal"]
+                    )
 
             else:
-                print('Rekam medis tidak ditemukan')
+                print(
+                    'Rekam medis tidak ditemukan'
+                )
 
         elif pilihan in ['5', 'laporan']:
 
-            print('\n=== LAPORAN PASIEN ===')
+            print(
+                '\n=== LAPORAN PASIEN ==='
+            )
 
             total = 0
 
             for poli, queue in queues.items():
 
                 print(
-                    f'{poli}: {queue.size} pasien'
+                    f'{poli}: '
+                    f'{queue.size} pasien'
                 )
 
                 total += queue.size
 
-            print('---------------------')
+            print(
+                '---------------------'
+            )
+
             print(
                 'Total seluruh pasien:',
                 total
@@ -236,7 +415,9 @@ def main():
         elif pilihan == '6':
 
             jumlah = int(
-                input('Jumlah pasien random: ')
+                input(
+                    'Jumlah pasien random: '
+                )
             )
 
             nama_random = np.random.randint(
@@ -253,7 +434,9 @@ def main():
                     f'Pasien{nama_random[i]}'
                 )
 
-                poli = random.choice(POLI)
+                poli = random.choice(
+                    POLI
+                )
 
                 prioritas = np.random.randint(
                     1,
@@ -273,7 +456,8 @@ def main():
             end = time.time()
 
             print(
-                f'{jumlah} pasien berhasil dibuat'
+                f'{jumlah} pasien '
+                f'berhasil dibuat'
             )
 
             print(

@@ -25,4 +25,12 @@ class AntreanPasien:
 
     def panggil_pasien(self, queue):
 
-        return queue.dequeue()
+        pasien = queue.dequeue()
+
+        if pasien:
+
+            pasien.waktu_tunggu = (
+                time.time() - pasien.waktu_daftar
+            )
+
+        return pasien
