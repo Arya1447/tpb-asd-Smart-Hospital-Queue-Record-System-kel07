@@ -1,0 +1,1 @@
+print("sebentar nggih pak")
