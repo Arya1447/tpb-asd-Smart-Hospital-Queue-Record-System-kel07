@@ -47,9 +47,6 @@ def main():
     laporan_service = LaporanService()
     rekam_medis_service = RekamMedisService()
 
-    # =========================
-    # GRAPH RUJUKAN POLI
-    # =========================
 
     graph_poli.add_edge('Umum', 'Jantung')
     graph_poli.add_edge('Umum', 'Anak')
@@ -80,9 +77,7 @@ def main():
             'Pilih menu: '
         ).strip().lower()
 
-        # =====================================
-        # DAFTAR PASIEN
-        # =====================================
+        
 
         if pilihan in ['1', 'daftar pasien']:
 
@@ -123,10 +118,7 @@ def main():
 
             counter += 1
 
-        # =====================================
-        # PANGGIL PASIEN
-        # =====================================
-
+        
         elif pilihan in ['2', 'panggil pasien']:
 
             poli = input(
@@ -289,10 +281,7 @@ def main():
 
                 print('Antrean kosong')
 
-        # =====================================
-        # UNDO TINDAKAN
-        # =====================================
-
+        
         elif pilihan in ['3', 'undo tindakan']:
 
             poli = input(
@@ -384,9 +373,7 @@ def main():
 
                 print('Tidak ada tindakan')
 
-        # =====================================
-        # REKAM MEDIS
-        # =====================================
+        
 
         elif pilihan in ['4', 'rekam medis']:
 
@@ -459,9 +446,7 @@ def main():
                     'Rekam medis tidak ditemukan'
                 )
 
-        # =====================================
-        # LAPORAN
-        # =====================================
+        
 
         elif pilihan in ['5', 'laporan']:
 
@@ -497,9 +482,7 @@ def main():
 
             laporan_service.tampilkan_big_o()
 
-        # =====================================
-        # SIMULASI RANDOM
-        # =====================================
+        
 
         elif pilihan == '6':
 
