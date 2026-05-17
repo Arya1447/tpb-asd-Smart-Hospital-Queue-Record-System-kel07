@@ -7,7 +7,7 @@ Topik 1 Smart Hospital Queue & Record System
 4. Muh. Abd Rajab. S (25051030059)
 ## Mata Kuliah
 Algoritma dan Struktur Data  
-S1 Teknik Elektro  
+S1 Teknik Elektro
 Universitas Negeri Yogyakarta
 ## Deskripsi Project
 Project ini merupakan implementasi sistem manajemen antrian dan rekam medis rumah sakit menggunakan bahasa Python dan konsep Algoritma Struktur Data. Sistem dirancang untuk membantu pengelolaan pelayanan pasien pada beberapa poli rumah sakit dengan mempertimbangkan:
