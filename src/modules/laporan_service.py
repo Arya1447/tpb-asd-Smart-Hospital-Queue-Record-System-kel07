@@ -11,6 +11,31 @@ class LaporanService:
             f'{queue.size}'
         )
 
+
+    def tampilkan_rata_rata_waktu(
+        self,
+        daftar_waktu
+    ):
+
+        if len(daftar_waktu) == 0:
+
+            print(
+                'Rata-rata waktu tunggu: 0 detik'
+            )
+
+            return
+
+        rata_rata = (
+            sum(daftar_waktu)
+            / len(daftar_waktu)
+        )
+
+        print(
+            'Rata-rata waktu tunggu:',
+            f'{rata_rata:.2f} detik'
+        )
+
+
     def tampilkan_big_o(self):
 
         print(
@@ -24,6 +49,6 @@ class LaporanService:
         )
 
         print(
-            'Kompleksitas search BST: '
+            'Kompleks+itas search BST: '
             'O(log n)'
         )
