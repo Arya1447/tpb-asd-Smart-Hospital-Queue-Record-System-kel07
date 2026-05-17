@@ -12,8 +12,6 @@ from modules.dokter_service import DokterService
 from modules.laporan_service import LaporanService
 from modules.rekam_medis_service import RekamMedisService
 
-from models.rekam_medis import RekamMedis
-
 np.random.seed(42)
 random.seed(42)
 
@@ -47,7 +45,6 @@ def main():
     laporan_service = LaporanService()
     rekam_medis_service = RekamMedisService()
 
-
     graph_poli.add_edge('Umum', 'Jantung')
     graph_poli.add_edge('Umum', 'Anak')
     graph_poli.add_edge('Jantung', 'ICU')
@@ -77,7 +74,6 @@ def main():
             'Pilih menu: '
         ).strip().lower()
 
-        
 
         if pilihan in ['1', 'daftar pasien']:
 
@@ -118,7 +114,7 @@ def main():
 
             counter += 1
 
-        
+
         elif pilihan in ['2', 'panggil pasien']:
 
             poli = input(
@@ -187,64 +183,18 @@ def main():
                         tindakan
                     )
 
-                    rm_lama = bst_rm.search(
-                        pasien.no_antrian
+                    rekam_medis_service.tambah_rekam_medis(
+                        bst_rm,
+                        pasien,
+                        dokter,
+                        tindakan,
+                        tanggal
                     )
-
-                    data_tindakan = {
-                        "tindakan": tindakan,
-                        "dokter": dokter,
-                        "tanggal": tanggal
-                    }
-
-                    if rm_lama:
-
-                        rm_lama.riwayat.append(
-                            data_tindakan
-                        )
-
-                    else:
-
-                        rm = RekamMedis(
-                            pasien.no_antrian,
-                            pasien.nama,
-                            pasien.poli,
-                            [data_tindakan]
-                        )
-
-                        bst_rm.insert(rm)
 
                     print(
                         f'Tindakan "{tindakan}" '
                         f'berhasil ditambahkan'
                     )
-
-                print('\n=== REKAM MEDIS ===')
-
-                print(
-                    'No RM :',
-                    pasien.no_antrian
-                )
-
-                print(
-                    'Nama  :',
-                    pasien.nama
-                )
-
-                print(
-                    'Poli  :',
-                    pasien.poli
-                )
-
-                print(
-                    'Dokter :',
-                    dokter
-                )
-
-                print(
-                    'Waktu Tunggu :',
-                    f'{pasien.waktu_tunggu:.2f} detik'
-                )
 
                 hasil = bst_rm.search(
                     pasien.no_antrian
@@ -252,36 +202,16 @@ def main():
 
                 if hasil:
 
-                    print(
-                        'Riwayat Tindakan:'
+                    rekam_medis_service.tampilkan_rekam_medis(
+                        hasil
                     )
-
-                    for item in hasil.riwayat:
-
-                        print(
-                            '-------------------'
-                        )
-
-                        print(
-                            'Tindakan :',
-                            item["tindakan"]
-                        )
-
-                        print(
-                            'Dokter   :',
-                            item["dokter"]
-                        )
-
-                        print(
-                            'Tanggal  :',
-                            item["tanggal"]
-                        )
 
             else:
 
                 print('Antrean kosong')
 
         
+
         elif pilihan in ['3', 'undo tindakan']:
 
             poli = input(
@@ -373,8 +303,7 @@ def main():
 
                 print('Tidak ada tindakan')
 
-        
-
+    
         elif pilihan in ['4', 'rekam medis']:
 
             try:
@@ -396,49 +325,9 @@ def main():
 
             if hasil:
 
-                print(
-                    '\n=== REKAM MEDIS ==='
+                rekam_medis_service.tampilkan_rekam_medis(
+                    hasil
                 )
-
-                print(
-                    'No RM :',
-                    hasil.no_rm
-                )
-
-                print(
-                    'Nama  :',
-                    hasil.nama
-                )
-
-                print(
-                    'Poli  :',
-                    hasil.poli
-                )
-
-                print(
-                    'Riwayat Tindakan:'
-                )
-
-                for item in hasil.riwayat:
-
-                    print(
-                        '-------------------'
-                    )
-
-                    print(
-                        'Tindakan :',
-                        item["tindakan"]
-                    )
-
-                    print(
-                        'Dokter   :',
-                        item["dokter"]
-                    )
-
-                    print(
-                        'Tanggal  :',
-                        item["tanggal"]
-                    )
 
             else:
 
@@ -447,7 +336,6 @@ def main():
                 )
 
         
-
         elif pilihan in ['5', 'laporan']:
 
             print(
@@ -482,8 +370,7 @@ def main():
 
             laporan_service.tampilkan_big_o()
 
-        
-
+      
         elif pilihan == '6':
 
             try:
@@ -544,6 +431,7 @@ def main():
                 f'{end - start:.5f} detik'
             )
 
+      
 
         elif pilihan in ['7', 'graph rujukan poli']:
 
@@ -565,7 +453,7 @@ def main():
                     'Input tidak boleh kosong'
                 )
 
-        
+    
 
         elif pilihan in ['8', 'keluar']:
 
