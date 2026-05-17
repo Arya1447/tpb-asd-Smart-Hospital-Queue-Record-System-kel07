@@ -15,13 +15,16 @@ class BSTRekamMedis:
 
         new_node = BSTNode(rekord)
 
+        # jika root kosong
         if self.root is None:
             self.root = new_node
             return
-            current = self.root
+
+        current = self.root
 
         while True:
 
+            # ke kiri
             if rekord.no_rm < current.rekord.no_rm:
 
                 if current.left is None:
@@ -30,6 +33,7 @@ class BSTRekamMedis:
 
                 current = current.left
 
+            # ke kanan
             else:
 
                 if current.right is None:
@@ -54,3 +58,4 @@ class BSTRekamMedis:
                 current = current.right
 
         return None
+    

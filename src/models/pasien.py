@@ -7,3 +7,5 @@ class Pasien:
     nama: str
     poli: str
     prioritas: int
+    waktu_daftar: float
+    waktu_tunggu: float = 0.0

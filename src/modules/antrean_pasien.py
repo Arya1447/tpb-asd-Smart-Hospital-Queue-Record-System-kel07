@@ -1,3 +1,4 @@
+import time
 from models.pasien import Pasien
 
 
@@ -16,7 +17,8 @@ class AntreanPasien:
             nomor,
             nama,
             poli,
-            prioritas
+            prioritas,
+            time.time()
         )
 
         queue.enqueue(pasien)

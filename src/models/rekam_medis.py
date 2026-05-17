@@ -6,4 +6,5 @@ from typing import List
 class RekamMedis:
     no_rm: int
     nama: str
+    poli: str
     riwayat: List[str]
