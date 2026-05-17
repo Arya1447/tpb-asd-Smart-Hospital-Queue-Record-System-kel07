@@ -90,7 +90,8 @@ def main():
             )
 
             print(
-                f'Pasien {nama} berhasil ditambahkan ke poli {poli}'
+                f'Pasien {nama} berhasil '
+                f'ditambahkan ke poli {poli}'
             )
 
             counter += 1
@@ -186,7 +187,8 @@ def main():
                         bst_rm.insert(rm)
 
                     print(
-                        f'Tindakan "{tindakan}" berhasil ditambahkan'
+                        f'Tindakan "{tindakan}" '
+                        f'berhasil ditambahkan'
                     )
 
                 print('\n=== REKAM MEDIS ===')
@@ -222,7 +224,9 @@ def main():
 
                 if hasil:
 
-                    print('Riwayat Tindakan:')
+                    print(
+                        'Riwayat Tindakan:'
+                    )
 
                     for item in hasil.riwayat:
 
@@ -267,7 +271,9 @@ def main():
             )
 
             if rm is None:
-                print('Rekam medis tidak ditemukan')
+                print(
+                    'Rekam medis tidak ditemukan'
+                )
                 continue
 
             hasil_undo = dokter_service.undo_tindakan(
@@ -282,7 +288,9 @@ def main():
                         rm.riwayat.pop()
                     )
 
-                    print('Undo berhasil')
+                    print(
+                        '\nUndo berhasil'
+                    )
 
                     print(
                         'No RM :',
@@ -396,9 +404,11 @@ def main():
 
             for poli, queue in queues.items():
 
-                print(
-                    f'{poli}: '
-                    f'{queue.size} pasien'
+                print(f'\nPoli {poli}')
+
+                laporan_service.tampilkan_total_pasien(
+                    poli,
+                    queue
                 )
 
                 total += queue.size
@@ -411,6 +421,8 @@ def main():
                 'Total seluruh pasien:',
                 total
             )
+
+            laporan_service.tampilkan_big_o()
 
         elif pilihan == '6':
 
