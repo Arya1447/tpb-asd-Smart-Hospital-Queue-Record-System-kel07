@@ -44,6 +44,8 @@ def main():
     laporan_service = LaporanService()
     rekam_medis_service = RekamMedisService()
 
+    semua_waktu_tunggu = []
+
     counter = 1
 
     print('=== SMART HOSPITAL QUEUE SYSTEM ===')
@@ -114,6 +116,10 @@ def main():
 
                 dokter = dokter_service.get_dokter(
                     poli
+                )
+
+                semua_waktu_tunggu.append(
+                    pasien.waktu_tunggu
                 )
 
                 print('\n=== PASIEN DIPANGGIL ===')
@@ -271,9 +277,11 @@ def main():
             )
 
             if rm is None:
+
                 print(
                     'Rekam medis tidak ditemukan'
                 )
+
                 continue
 
             hasil_undo = dokter_service.undo_tindakan(
@@ -324,11 +332,13 @@ def main():
                     )
 
                 else:
+
                     print(
                         'Riwayat tindakan kosong'
                     )
 
             else:
+
                 print('Tidak ada tindakan')
 
         elif pilihan in ['4', 'rekam medis']:
@@ -390,6 +400,7 @@ def main():
                     )
 
             else:
+
                 print(
                     'Rekam medis tidak ditemukan'
                 )
@@ -420,6 +431,10 @@ def main():
             print(
                 'Total seluruh pasien:',
                 total
+            )
+
+            laporan_service.tampilkan_rata_rata_waktu(
+                semua_waktu_tunggu
             )
 
             laporan_service.tampilkan_big_o()
@@ -483,6 +498,7 @@ def main():
             break
 
         else:
+
             print('Pilihan tidak valid')
 
 
