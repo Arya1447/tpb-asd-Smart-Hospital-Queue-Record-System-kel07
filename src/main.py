@@ -561,9 +561,6 @@ def main():
                 f'{end - start:.5f} detik'
             )
 
-        # =====================================
-        # GRAPH POLI
-        # =====================================
 
         elif pilihan in ['7', 'graph rujukan poli']:
 
@@ -585,9 +582,7 @@ def main():
                     'Input tidak boleh kosong'
                 )
 
-        # =====================================
-        # KELUAR
-        # =====================================
+        
 
         elif pilihan in ['8', 'keluar']:
 
