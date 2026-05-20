@@ -58,4 +58,58 @@ class BSTRekamMedis:
                 current = current.right
 
         return None
-    
+
+
+# untuk mengetes BST
+
+class RekamMedis:
+
+    def __init__(self, no_rm, nama):
+
+        self.no_rm = no_rm
+        self.nama = nama
+
+
+bst = BSTRekamMedis()
+
+bst.insert(
+    RekamMedis(10, 'Arya')
+)
+
+bst.insert(
+    RekamMedis(5, 'Budi')
+)
+
+bst.insert(
+    RekamMedis(20, 'Caca')
+)
+
+bst.insert(
+    RekamMedis(15, 'Dina')
+)
+
+# mencari data
+hasil = bst.search(20)     #untuk cari data di insert BST
+
+# tampilkan hasil
+if hasil:
+
+    print(
+        'Data ditemukan'
+    )
+
+    print(
+        'No RM :',
+        hasil.no_rm
+    )
+
+    print(
+        'Nama  :',
+        hasil.nama
+    )
+
+else:
+
+    print(
+        'Data tidak ditemukan'
+    )
