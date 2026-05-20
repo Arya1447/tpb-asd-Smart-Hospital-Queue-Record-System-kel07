@@ -115,8 +115,26 @@ def main():
         '=== SMART HOSPITAL QUEUE SYSTEM ==='
     )
 
-    while True:
+    # =====================================
+    # MENU AWAL
+    # =====================================
 
+    pilihan_awal = input(
+        'ketik "BANTUAN" untuk menampilkan daftar perintah: '
+    ).strip().lower()
+
+    if pilihan_awal != 'bantuan':
+
+        print(
+            'Program selesai'
+        )
+
+        return
+
+    # =====================================
+    # TAMPILKAN MENU
+    # =====================================
+    while True:
         print('\nMenu:')
         print('1. Daftar Pasien')
         print('2. Panggil Pasien')
@@ -125,9 +143,9 @@ def main():
         print('5. Laporan')
         print('6. Simulasi Pasien Random')
         print('7. Keluar')
-       
+
         pilihan = input(
-            'Pilih menu: '
+            '\nPilih menu: '
         ).strip().lower()
 
         # =====================================
@@ -508,7 +526,7 @@ def main():
         # SIMULASI RANDOM
         # =====================================
 
-        elif pilihan == '6':
+        elif pilihan in ['6', 'simulasi']:
 
             try:
 
@@ -582,7 +600,9 @@ def main():
                 f'{end - start:.5f} detik'
             )
 
-       
+        # =====================================
+        # KELUAR
+        # =====================================
 
         elif pilihan in ['7', 'keluar']:
 
