@@ -12,6 +12,10 @@ from modules.dokter_service import DokterService
 from modules.laporan_service import LaporanService
 from modules.rekam_medis_service import RekamMedisService
 
+# MODULE BARU
+from modules.cli_service import CLIService
+from modules.sorting_service import SortingService
+
 np.random.seed(42)
 random.seed(42)
 
@@ -36,7 +40,6 @@ def hapus_rekam_medis(
     if root is None:
         return root
 
-    # KE KIRI
     if no_rm < root.rekord.no_rm:
 
         root.left = hapus_rekam_medis(
@@ -44,7 +47,6 @@ def hapus_rekam_medis(
             no_rm
         )
 
-    # KE KANAN
     elif no_rm > root.rekord.no_rm:
 
         root.right = hapus_rekam_medis(
@@ -52,18 +54,14 @@ def hapus_rekam_medis(
             no_rm
         )
 
-    # NODE DITEMUKAN
     else:
 
-        # TANPA CHILD KIRI
         if root.left is None:
             return root.right
 
-        # TANPA CHILD KANAN
         if root.right is None:
             return root.left
 
-        # CARI SUCCESSOR
         temp = root.right
 
         while temp.left:
@@ -103,49 +101,26 @@ def main():
 
     semua_waktu_tunggu = []
 
-    # =====================================
-    # NOMOR RM TERSEDIA KEMBALI
-    # =====================================
-
     nomor_rm_tersedia = []
 
     counter = 1
 
-    print(
-        '=== SMART HOSPITAL QUEUE SYSTEM ==='
-    )
-
     # =====================================
-    # MENU AWAL
+    # HEADER CLI
     # =====================================
 
-    pilihan_awal = input(
-        'ketik "BANTUAN" untuk menampilkan daftar perintah: '
-    ).strip().lower()
+    CLIService.tampilkan_header()
 
-    if pilihan_awal != 'bantuan':
-
-        print(
-            'Program selesai'
-        )
-
-        return
-
-    # =====================================
-    # TAMPILKAN MENU
-    # =====================================
     while True:
-        print('\nMenu:')
-        print('1. Daftar Pasien')
-        print('2. Panggil Pasien')
-        print('3. Undo Tindakan')
-        print('4. Rekam Medis')
-        print('5. Laporan')
-        print('6. Simulasi Pasien Random')
-        print('7. Keluar')
+
+        # =====================================
+        # MENU CLI
+        # =====================================
+
+        CLIService.tampilkan_menu()
 
         pilihan = input(
-            '\nPilih menu: '
+            'Pilih menu: '
         ).strip().lower()
 
         # =====================================
@@ -181,10 +156,6 @@ def main():
                 )
 
                 continue
-
-            # =================================
-            # GUNAKAN RM BEKAS JIKA ADA
-            # =================================
 
             if nomor_rm_tersedia:
 
@@ -278,10 +249,6 @@ def main():
                     f'{pasien.waktu_tunggu:.2f} detik'
                 )
 
-                # =================================
-                # INPUT TINDAKAN
-                # =================================
-
                 while True:
 
                     tindakan = input(
@@ -316,10 +283,6 @@ def main():
                         f'berhasil ditambahkan'
                     )
 
-                # =================================
-                # RAWAT INAP
-                # =================================
-
                 rawat = input(
                     '\nApakah pasien perlu dirawat? (y/n): '
                 ).lower()
@@ -339,10 +302,6 @@ def main():
                     print(
                         'Pasien diperbolehkan pulang'
                     )
-
-                # =================================
-                # TAMPILKAN REKAM MEDIS
-                # =================================
 
                 hasil = bst_rm.search(
                     pasien.no_antrian
@@ -404,10 +363,6 @@ def main():
                         'Tindakan terakhir dibatalkan'
                     )
 
-                    # =============================
-                    # HAPUS REKAM MEDIS
-                    # =============================
-
                     bst_rm.root = hapus_rekam_medis(
                         bst_rm.root,
                         nomor_rm
@@ -416,10 +371,6 @@ def main():
                     print(
                         'Rekam medis berhasil dihapus'
                     )
-
-                    # =============================
-                    # RM BISA DIPAKAI LAGI
-                    # =============================
 
                     nomor_rm_tersedia.append(
                         nomor_rm
@@ -526,7 +477,7 @@ def main():
         # SIMULASI RANDOM
         # =====================================
 
-        elif pilihan in ['6', 'simulasi']:
+        elif pilihan == '6':
 
             try:
 
@@ -567,10 +518,6 @@ def main():
                     4
                 )
 
-                # =============================
-                # GUNAKAN RM BEKAS
-                # =============================
-
                 if nomor_rm_tersedia:
 
                     nomor_rm = nomor_rm_tersedia.pop(0)
@@ -601,10 +548,42 @@ def main():
             )
 
         # =====================================
+        # SORTING DATA PASIEN
+        # =====================================
+
+        elif pilihan == '7':
+
+            data_pasien = []
+
+            for poli, queue in queues.items():
+
+                current = queue.head
+
+                while current is not None:
+
+                    data_pasien.append(
+                        current.data.nama
+                    )
+
+                    current = current.next
+
+            if data_pasien:
+
+                SortingService.tampilkan_sorting(
+                    data_pasien
+                )
+
+            else:
+
+                print(
+                    'Data pasien kosong'
+                )
+
+        # =====================================
         # KELUAR
         # =====================================
 
-        elif pilihan in ['7', 'keluar']:
+        elif pilihan in ['8', 'keluar']:
 
             print(
                 'Program selesai'
