@@ -24,6 +24,62 @@ PRIORITAS = {
 }
 
 
+# =====================================
+# HAPUS NODE BST
+# =====================================
+
+def hapus_rekam_medis(
+    root,
+    no_rm
+):
+
+    if root is None:
+        return root
+
+    # KE KIRI
+    if no_rm < root.rekord.no_rm:
+
+        root.left = hapus_rekam_medis(
+            root.left,
+            no_rm
+        )
+
+    # KE KANAN
+    elif no_rm > root.rekord.no_rm:
+
+        root.right = hapus_rekam_medis(
+            root.right,
+            no_rm
+        )
+
+    # NODE DITEMUKAN
+    else:
+
+        # TANPA CHILD KIRI
+        if root.left is None:
+            return root.right
+
+        # TANPA CHILD KANAN
+        if root.right is None:
+            return root.left
+
+        # CARI SUCCESSOR
+        temp = root.right
+
+        while temp.left:
+
+            temp = temp.left
+
+        root.rekord = temp.rekord
+
+        root.right = hapus_rekam_medis(
+            root.right,
+            temp.rekord.no_rm
+        )
+
+    return root
+
+
 def main():
 
     queues = {
@@ -45,18 +101,19 @@ def main():
     laporan_service = LaporanService()
     rekam_medis_service = RekamMedisService()
 
-    graph_poli.add_edge('Umum', 'Jantung')
-    graph_poli.add_edge('Umum', 'Anak')
-    graph_poli.add_edge('Jantung', 'ICU')
-    graph_poli.add_edge('Ortopedi', 'Radiologi')
-    graph_poli.add_edge('Anak', 'Laboratorium')
-    graph_poli.add_edge('Gigi', 'Radiologi')
-
     semua_waktu_tunggu = []
+
+    # =====================================
+    # NOMOR RM TERSEDIA KEMBALI
+    # =====================================
+
+    nomor_rm_tersedia = []
 
     counter = 1
 
-    print('=== SMART HOSPITAL QUEUE SYSTEM ===')
+    print(
+        '=== SMART HOSPITAL QUEUE SYSTEM ==='
+    )
 
     while True:
 
@@ -67,13 +124,15 @@ def main():
         print('4. Rekam Medis')
         print('5. Laporan')
         print('6. Simulasi Pasien Random')
-        print('7. Graph Rujukan Poli')
-        print('8. Keluar')
-
+        print('7. Keluar')
+       
         pilihan = input(
             'Pilih menu: '
         ).strip().lower()
 
+        # =====================================
+        # DAFTAR PASIEN
+        # =====================================
 
         if pilihan in ['1', 'daftar pasien']:
 
@@ -91,17 +150,36 @@ def main():
 
             if poli not in queues:
 
-                print('Poli tidak tersedia')
+                print(
+                    'Poli tidak tersedia'
+                )
+
                 continue
 
             if prioritas not in PRIORITAS:
 
-                print('Prioritas tidak valid')
+                print(
+                    'Prioritas tidak valid'
+                )
+
                 continue
+
+            # =================================
+            # GUNAKAN RM BEKAS JIKA ADA
+            # =================================
+
+            if nomor_rm_tersedia:
+
+                nomor_rm = nomor_rm_tersedia.pop(0)
+
+            else:
+
+                nomor_rm = counter
+                counter += 1
 
             antrean_service.daftar_pasien(
                 queues[poli],
-                counter,
+                nomor_rm,
                 nama,
                 poli,
                 PRIORITAS[prioritas]
@@ -112,8 +190,13 @@ def main():
                 f'ditambahkan ke poli {poli}'
             )
 
-            counter += 1
+            print(
+                f'Nomor RM : {nomor_rm}'
+            )
 
+        # =====================================
+        # PANGGIL PASIEN
+        # =====================================
 
         elif pilihan in ['2', 'panggil pasien']:
 
@@ -123,7 +206,10 @@ def main():
 
             if poli not in queues:
 
-                print('Poli tidak tersedia')
+                print(
+                    'Poli tidak tersedia'
+                )
+
                 continue
 
             pasien = antrean_service.panggil_pasien(
@@ -140,7 +226,14 @@ def main():
                     pasien.waktu_tunggu
                 )
 
-                print('\n=== PASIEN DIPANGGIL ===')
+                print(
+                    '\n=== PASIEN DIPANGGIL ==='
+                )
+
+                print(
+                    'Nomor RM :',
+                    pasien.no_antrian
+                )
 
                 print(
                     'Nama :',
@@ -158,9 +251,18 @@ def main():
                 )
 
                 print(
+                    'Prioritas :',
+                    pasien.prioritas
+                )
+
+                print(
                     'Waktu Tunggu :',
                     f'{pasien.waktu_tunggu:.2f} detik'
                 )
+
+                # =================================
+                # INPUT TINDAKAN
+                # =================================
 
                 while True:
 
@@ -196,6 +298,34 @@ def main():
                         f'berhasil ditambahkan'
                     )
 
+                # =================================
+                # RAWAT INAP
+                # =================================
+
+                rawat = input(
+                    '\nApakah pasien perlu dirawat? (y/n): '
+                ).lower()
+
+                if rawat == 'y':
+
+                    graph_poli.route_pasien(
+                        pasien
+                    )
+
+                else:
+
+                    print(
+                        '\nPasien rawat jalan'
+                    )
+
+                    print(
+                        'Pasien diperbolehkan pulang'
+                    )
+
+                # =================================
+                # TAMPILKAN REKAM MEDIS
+                # =================================
+
                 hasil = bst_rm.search(
                     pasien.no_antrian
                 )
@@ -208,102 +338,98 @@ def main():
 
             else:
 
-                print('Antrean kosong')
+                print(
+                    'Antrean kosong'
+                )
 
-        
+        # =====================================
+        # UNDO TINDAKAN
+        # =====================================
 
         elif pilihan in ['3', 'undo tindakan']:
-
-            poli = input(
-                'Poli: '
-            ).strip().capitalize()
-
-            if poli not in dokter_stacks:
-
-                print('Poli tidak tersedia')
-                continue
 
             try:
 
                 nomor_rm = int(
-                    input('Nomor RM: ')
+                    input(
+                        'Masukkan nomor RM: '
+                    )
                 )
 
             except ValueError:
 
-                print('Nomor RM harus angka')
-                continue
-
-            rm = bst_rm.search(
-                nomor_rm
-            )
-
-            if rm is None:
-
                 print(
-                    'Rekam medis tidak ditemukan'
+                    'Nomor RM harus angka'
                 )
 
                 continue
 
-            hasil_undo = dokter_service.undo_tindakan(
-                dokter_stacks[poli]
+            hasil_rm = bst_rm.search(
+                nomor_rm
             )
 
-            if hasil_undo:
+            if hasil_rm:
 
-                if rm.riwayat:
+                poli_pasien = hasil_rm.poli
 
-                    tindakan_dihapus = (
-                        rm.riwayat.pop()
+                hasil_undo = dokter_service.undo_tindakan(
+                    dokter_stacks[poli_pasien]
+                )
+
+                if hasil_undo:
+
+                    print(
+                        '\nUndo tindakan berhasil'
                     )
 
                     print(
-                        '\nUndo berhasil'
+                        'Tindakan terakhir dibatalkan'
+                    )
+
+                    # =============================
+                    # HAPUS REKAM MEDIS
+                    # =============================
+
+                    bst_rm.root = hapus_rekam_medis(
+                        bst_rm.root,
+                        nomor_rm
                     )
 
                     print(
-                        'No RM :',
-                        rm.no_rm
+                        'Rekam medis berhasil dihapus'
                     )
 
-                    print(
-                        'Nama  :',
-                        rm.nama
+                    # =============================
+                    # RM BISA DIPAKAI LAGI
+                    # =============================
+
+                    nomor_rm_tersedia.append(
+                        nomor_rm
                     )
 
-                    print(
-                        'Tindakan dihapus :',
-                        tindakan_dihapus[
-                            "tindakan"
-                        ]
-                    )
+                    nomor_rm_tersedia.sort()
 
                     print(
-                        'Dokter :',
-                        tindakan_dihapus[
-                            "dokter"
-                        ]
-                    )
-
-                    print(
-                        'Tanggal :',
-                        tindakan_dihapus[
-                            "tanggal"
-                        ]
+                        f'Nomor RM {nomor_rm} '
+                        f'bisa digunakan kembali'
                     )
 
                 else:
 
                     print(
-                        'Riwayat tindakan kosong'
+                        'Tidak ada tindakan'
                     )
 
             else:
 
-                print('Tidak ada tindakan')
+                print(
+                    'Rekam medis tidak ditemukan'
+                )
 
-    
+        # =====================================
+        # REKAM MEDIS
+        # =====================================
+
         elif pilihan in ['4', 'rekam medis']:
 
             try:
@@ -316,7 +442,10 @@ def main():
 
             except ValueError:
 
-                print('Nomor RM harus angka')
+                print(
+                    'Nomor RM harus angka'
+                )
+
                 continue
 
             hasil = bst_rm.search(
@@ -335,7 +464,10 @@ def main():
                     'Rekam medis tidak ditemukan'
                 )
 
-        
+        # =====================================
+        # LAPORAN
+        # =====================================
+
         elif pilihan in ['5', 'laporan']:
 
             print(
@@ -346,7 +478,9 @@ def main():
 
             for poli, queue in queues.items():
 
-                print(f'\nPoli {poli}')
+                print(
+                    f'\nPoli {poli}'
+                )
 
                 laporan_service.tampilkan_total_pasien(
                     poli,
@@ -370,7 +504,10 @@ def main():
 
             laporan_service.tampilkan_big_o()
 
-      
+        # =====================================
+        # SIMULASI RANDOM
+        # =====================================
+
         elif pilihan == '6':
 
             try:
@@ -383,7 +520,10 @@ def main():
 
             except ValueError:
 
-                print('Input harus angka')
+                print(
+                    'Input harus angka'
+                )
+
                 continue
 
             nama_random = np.random.randint(
@@ -409,15 +549,26 @@ def main():
                     4
                 )
 
+                # =============================
+                # GUNAKAN RM BEKAS
+                # =============================
+
+                if nomor_rm_tersedia:
+
+                    nomor_rm = nomor_rm_tersedia.pop(0)
+
+                else:
+
+                    nomor_rm = counter
+                    counter += 1
+
                 antrean_service.daftar_pasien(
                     queues[poli],
-                    counter,
+                    nomor_rm,
                     nama,
                     poli,
                     prioritas
                 )
-
-                counter += 1
 
             end = time.time()
 
@@ -431,38 +582,21 @@ def main():
                 f'{end - start:.5f} detik'
             )
 
-      
+       
 
-        elif pilihan in ['7', 'graph rujukan poli']:
+        elif pilihan in ['7', 'keluar']:
 
-            graph_poli.tampilkan_graph()
+            print(
+                'Program selesai'
+            )
 
-            mulai = input(
-                'Mulai BFS dari poli: '
-            ).strip().capitalize()
-
-            if mulai:
-
-                graph_poli.bfs(
-                    mulai
-                )
-
-            else:
-
-                print(
-                    'Input tidak boleh kosong'
-                )
-
-    
-
-        elif pilihan in ['8', 'keluar']:
-
-            print('Program selesai')
             break
 
         else:
 
-            print('Pilihan tidak valid')
+            print(
+                'Pilihan tidak valid'
+            )
 
 
 if __name__ == '__main__':
