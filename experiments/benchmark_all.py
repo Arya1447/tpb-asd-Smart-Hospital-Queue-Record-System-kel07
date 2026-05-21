@@ -16,11 +16,11 @@ import numpy as np
 import time
 import random
 
-from src.data_structures.priority_queue import PriorityQueue
-from src.data_structures.bst import BSTRekamMedis
+from data_structures.priority_queue import PriorityQueue
+from data_structures.bst import BSTRekamMedis
 
-from src.models.pasien import Pasien
-from src.models.rekam_medis import RekamMedis
+from models.pasien import Pasien
+from models.rekam_medis import RekamMedis
 
 np.random.seed(42)
 random.seed(42)
