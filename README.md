@@ -10,16 +10,18 @@ Algoritma dan Struktur Data
 S1 Teknik Elektro
 Universitas Negeri Yogyakarta
 ## Deskripsi Project
-Project ini merupakan implementasi sistem manajemen antrian dan rekam medis rumah sakit menggunakan bahasa Python dan konsep Algoritma Struktur Data. Sistem dirancang untuk membantu pengelolaan pelayanan pasien pada beberapa poli rumah sakit dengan mempertimbangkan:
-
-- prioritas pasien
-- antrian pelayanan tiap poli
-- riwayat tindakan dokter
-- pencarian rekam medis pasien
-- laporan pelayanan harian
+Program ini merupakan simulasi sistem antrean rumah sakit berbasis CLI menggunakan Python. Program mengimplementasikan struktur data Priority Queue, Stack, BST, dan Graph untuk mengelola antrean pasien, rekam medis, undo tindakan dokter, dan alur rawat pasien antar poli.
 ## Struktur Data Yang Digunakan
-Priority Queue : Antrian pasien per prioritas.  
-Stack : Undo tindakan dokter.
-Binary Search Tree (BST) : Pencarian rekam medis pasien.
-Graph : Alur rujukan antar poli.
-
+Priority Queue : Digunakan untuk antrean pasien berdasarkan prioritas. 
+Stack :  Digunakan untuk fitur undo tindakan dokter.
+Binary Search Tree (BST) :Digunakan untuk penyimpanan dan pencarian rekam medis pasien.
+Graph : Digunakan untuk simulasi alur pasien antar poli/rawat inap.
+## Fitur Program
+- Daftar pasien
+- Panggil pasien berdasarkan prioritas
+- Undo tindakan dokter
+- Cari rekam medis pasien
+- Laporan pasien
+- Simulasi random pasien
+- Sorting data pasien
+- Routing pasien antar poli
