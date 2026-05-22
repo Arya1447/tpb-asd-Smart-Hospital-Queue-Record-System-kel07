@@ -18,7 +18,8 @@ Project ini merupakan implementasi sistem manajemen antrian dan rekam medis ruma
 - pencarian rekam medis pasien
 - laporan pelayanan harian
 ## Struktur Data Yang Digunakan
-Priority Queue (Linked List) : Digunakan untuk antrian pasien per poli.  
-Stack (Linked List) : Digunakan untuk menyimpan riwayat tindakan dokter.  
-Binary Search Tree (BST) : Digunakan untuk penyimpanan rekam medis pasien.
+Priority Queue : Antrian pasien per prioritas.  
+Stack : Undo tindakan dokter.
+Binary Search Tree (BST) : Pencarian rekam medis pasien.
+Graph : Alur rujukan antar poli.
 
